@@ -5,14 +5,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 const http = require("http").createServer(app);
-const io = require("socket.io")(http,  {
-  cors: {
-    origin: "https://meet-up-blond.vercel.app/",  
-    methods: ["GET", "POST"],
-    allowedHeaders: ["auth-x-token"],  
-    credentials: true
-  }
-}); 
+const io = require("socket.io")(http); 
 const UserRoutes = require("./Routes/UserRoutes");
 const MessageRoutes = require("./Routes/MessageRoutes");
 require("dotenv").config();
