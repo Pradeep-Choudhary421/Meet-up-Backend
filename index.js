@@ -5,7 +5,14 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 const http = require("http").createServer(app);
-const io = require("socket.io")(http); 
+const io = require("socket.io")(http,  {
+  cors: {
+    origin: "https://meet-up-blond.vercel.app/",  
+    methods: ["GET", "POST"],
+    allowedHeaders: ["auth-x-token"],  
+    credentials: true
+  }
+}); 
 const UserRoutes = require("./Routes/UserRoutes");
 const MessageRoutes = require("./Routes/MessageRoutes");
 require("dotenv").config();
@@ -26,7 +33,7 @@ app.get("/", (req, res) => {
 mongoose
   .connect(process.env.MONGODB)
   .then(() => {
-    http.listen(process.env.PORT, () => { // Use http.listen instead of app.listen
+    http.listen(process.env.PORT, () => { 
       console.log(`Server is connected to ${process.env.PORT}`);
     });
   })
@@ -34,7 +41,6 @@ mongoose
     console.log("Error: " + err.message);
   });
 
-// WebSocket (socket.io) integration
 io.on("connection", (socket) => {
   console.log("A user connected");
 
@@ -42,10 +48,8 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
 
-  // Handle incoming messages from client
   socket.on("chat message", (msg) => {
     console.log("Message from client: " + msg);
-    // Broadcast the message to all clients
     io.emit("chat message", msg);
   });
 });
