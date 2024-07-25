@@ -45,7 +45,7 @@ const getMessages = async (req, res) => {
       members: { $all: [senderId, receiverId] },
     }).populate("messages")
     if (!conversation) {
-      return res.status(404).json({ message: "Conversation not found" });
+      return res.status(200).json({ message: "No Conversation Started" });
     }
     res.status(200).json({ conversation });
   } catch (err) {
